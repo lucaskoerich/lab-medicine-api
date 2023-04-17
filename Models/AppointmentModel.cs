@@ -1,0 +1,18 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace lab_medicine_api.Models;
+
+[Table("APPOINTMENTS")]
+public class AppointmentModel
+{
+    [Column("ID"), Key] public int Id { get; set; }
+
+    [Column("ID_PATIENT"), ForeignKey("PatientModel")]
+    public int IdPatient { get; set; }
+    
+    [Column("ID_DOCTOR"), ForeignKey("DoctorModel")]
+    public int IdDoctor { get; set; }
+    
+    public string Description { get; set; }
+}
