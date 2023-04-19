@@ -26,6 +26,7 @@ public class NurseController : Controller
         {
             NurseDto nurseDto = new();
 
+            nurseDto.Id = nurse.Id;
             nurseDto.Name = nurse.Name;
             nurseDto.Gender = nurse.Gender;
             nurseDto.BirthDate = nurse.BirthDate;
@@ -40,10 +41,10 @@ public class NurseController : Controller
     }
 
     [HttpGet]
-    [Route("{cpf}")]
-    public ActionResult GetNurseByCPF([FromRoute] string cpf)
+    [Route("{id}")]
+    public ActionResult GetNurseById([FromRoute] int id)
     {
-        NurseModel nurseModel = _labMedicineContext.Nurses.Where(n => n.CPF == cpf).FirstOrDefault();
+        NurseModel nurseModel = _labMedicineContext.Nurses.Find(id);
 
         if (nurseModel == null)
         {
@@ -52,6 +53,7 @@ public class NurseController : Controller
 
         NurseDto nurseDto = new();
 
+        nurseDto.Id = nurseModel.Id;
         nurseDto.Name = nurseModel.Name;
         nurseDto.Gender = nurseModel.Gender;
         nurseDto.BirthDate = nurseModel.BirthDate;
@@ -63,7 +65,7 @@ public class NurseController : Controller
     }
 
     [HttpPost]
-    public ActionResult NursePost([FromBody] NurseDto nurseDto)
+    public ActionResult<NurseDto> NursePost([FromBody] NurseDto nurseDto)
     {
         var nurseExists = _labMedicineContext.Nurses.Any(n => n.CPF == nurseDto.CPF);
 
@@ -74,6 +76,7 @@ public class NurseController : Controller
 
         NurseModel nurseModel = new();
 
+        nurseModel.Id = nurseDto.Id;
         nurseModel.Name = nurseDto.Name;
         nurseModel.Gender = nurseDto.Gender;
         nurseModel.BirthDate = nurseDto.BirthDate;
@@ -92,10 +95,10 @@ public class NurseController : Controller
     }
 
     [HttpPut]
-    [Route("{cpf}")]
-    public ActionResult UpdateNurse([FromRoute] string cpf, [FromBody] NurseDto nurseDto)
+    [Route("{id}")]
+    public ActionResult UpdateNurse([FromRoute] int id, [FromBody] NurseDto nurseDto)
     {
-        NurseModel nurseModel = _labMedicineContext.Nurses.Where(n => n.CPF == cpf).FirstOrDefault();
+        NurseModel nurseModel = _labMedicineContext.Nurses.Find(id);
 
         if (nurseModel == null)
         {
@@ -120,10 +123,10 @@ public class NurseController : Controller
     }
 
     [HttpDelete]
-    [Route("{cpf}")]
-    public ActionResult DeleteNurse([FromRoute] string cpf)
+    [Route("{id}")]
+    public ActionResult DeleteNurse([FromRoute] int id)
     {
-        var nurseToDelete = _labMedicineContext.Nurses.Where(n => n.CPF == cpf).FirstOrDefault();
+        var nurseToDelete = _labMedicineContext.Nurses.Find(id);
 
         if (nurseToDelete == null)
         {

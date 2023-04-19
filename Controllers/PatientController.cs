@@ -27,7 +27,8 @@ public class PatientController : Controller
         foreach (var patient in patientModelList)
         {
             var patientDto = new PatientDto();
-            
+
+            patientDto.Id = patient.Id;
             patientDto.Name = patient.Name;
             patientDto.CPF = patient.CPF;
             patientDto.Gender = patient.Gender;
@@ -39,11 +40,11 @@ public class PatientController : Controller
             patientDto.AttendanceStatus = patient.AttendanceStatus;
             patientDto.AppointmentCount = patient.AppointmentCount;
 
-            var patientAppointments = appointmentsList.Where(a => a.IdPatient == patient.CPF).ToList();
+            var patientAppointments = appointmentsList.Where(a => a.PatientId == patient.Id).ToList();
 
             patientDto.Appointments = patientAppointments.Select(a => new AppointmentModel
             {
-                IdDoctor = a.IdDoctor, IdPatient = a.IdPatient, Description = a.Description, Id = a.Id
+                DoctorId = a.DoctorId, PatientId = a.PatientId, Description = a.Description, Id = a.Id
             }).ToList();
 
             patientDtoList.Add(patientDto);
@@ -59,10 +60,10 @@ public class PatientController : Controller
     }
 
     [HttpGet]
-    [Route("{cpf}")]
-    public ActionResult GetPatientByCPF([FromRoute] string cpf)
+    [Route("{id}")]
+    public ActionResult GetPatientByID([FromRoute] int id)
     {
-        PatientModel patientModel = _labMedicineContext.Patients.Where(P => P.CPF == cpf).FirstOrDefault();
+        PatientModel patientModel = _labMedicineContext.Patients.Where(P => P.Id == id).FirstOrDefault();
         var appointmentsList = _labMedicineContext.Appointments.ToList();
 
         if (patientModel == null)
@@ -71,7 +72,8 @@ public class PatientController : Controller
         }
 
         var patientDto = new PatientDto();
-        
+
+        patientDto.Id = patientModel.Id;
         patientDto.Name = patientModel.Name;
         patientDto.CPF = patientModel.CPF;
         patientDto.Gender = patientModel.Gender;
@@ -83,11 +85,11 @@ public class PatientController : Controller
         patientDto.AttendanceStatus = patientModel.AttendanceStatus;
         patientDto.AppointmentCount = patientModel.AppointmentCount;
         
-        var patientAppointments = appointmentsList.Where(a => a.IdPatient == patientDto.CPF).ToList();
+        var patientAppointments = appointmentsList.Where(a => a.PatientId == patientDto.Id).ToList(); 
 
         patientDto.Appointments = patientAppointments.Select(a => new AppointmentModel
         {
-            IdDoctor = a.IdDoctor, IdPatient = a.IdPatient, Description = a.Description, Id = a.Id
+            DoctorId = a.DoctorId, PatientId = a.PatientId, Description = a.Description, Id = a.Id
         }).ToList();
 
         return Ok(patientDto);
@@ -95,7 +97,7 @@ public class PatientController : Controller
 
 
     [HttpPost]
-    public ActionResult PostPatient([FromBody] PostPatientDto postPatientDto)
+    public ActionResult<PostPatientDto> PostPatient([FromBody] PostPatientDto postPatientDto)
     {
         var patientExists = _labMedicineContext.Patients.Any(p => p.CPF == postPatientDto.CPF);
 
@@ -105,7 +107,7 @@ public class PatientController : Controller
         }
 
         PatientModel patientModel = new();
-
+        
         patientModel.Name = postPatientDto.Name;
         patientModel.Gender = postPatientDto.Gender;
         patientModel.BirthDate = postPatientDto.BirthDate;
@@ -131,10 +133,10 @@ public class PatientController : Controller
 
 
     [HttpPut]
-    [Route("{cpf}")]
-    public ActionResult UpdatePatient([FromRoute] string cpf, [FromBody] UpdatePatientDto updatePatientDto)
+    [Route("{id}")]
+    public ActionResult<UpdatePatientDto> UpdatePatient([FromRoute] int id, [FromBody] UpdatePatientDto updatePatientDto)
     {
-        PatientModel patientModel = _labMedicineContext.Patients.Where(p => p.CPF == cpf).FirstOrDefault();
+        PatientModel patientModel = _labMedicineContext.Patients.Find(id);
 
         if (patientModel == null)
         {
@@ -163,10 +165,10 @@ public class PatientController : Controller
 
 
     [HttpPatch]
-    [Route("{CPF}/status")]
-    public ActionResult UpdateAttendanceStatus([FromRoute] string CPF, [FromBody] PatchPatientDto patchPatientDto)
+    [Route("{id}/status")]
+    public ActionResult<PatchPatientDto> UpdateAttendanceStatus([FromRoute] int id, [FromBody] PatchPatientDto patchPatientDto)
     {
-        PatientModel patientModel = _labMedicineContext.Patients.Where(p => p.CPF == CPF).FirstOrDefault();
+        PatientModel patientModel = _labMedicineContext.Patients.Find(id);
 
         if (patientModel != null)
         {
@@ -181,10 +183,10 @@ public class PatientController : Controller
     }
 
     [HttpDelete]
-    [Route("{cpf}")]
-    public ActionResult DeletePatient([FromRoute] string cpf)
+    [Route("{id}")]
+    public ActionResult DeletePatient([FromRoute] int id)
     {
-        var patientToRemove = _labMedicineContext.Patients.Where(p => p.CPF == cpf).FirstOrDefault();
+        var patientToRemove = _labMedicineContext.Patients.Find(id);
 
         if (patientToRemove == null)
         {

@@ -27,6 +27,7 @@ public class DoctorController : Controller
         {
             var getDoctorDto = new GetDoctorDto();
 
+            getDoctorDto.Id = doctor.Id;
             getDoctorDto.Name = doctor.Name;
             getDoctorDto.Gender = doctor.Gender;
             getDoctorDto.BirthDate = doctor.BirthDate;
@@ -39,17 +40,17 @@ public class DoctorController : Controller
             getDoctorDto.AppointmentCount = doctor.AppointmentCount;
 
 
-            var doctorAppointments = appointmentsList.Where(a => a.IdDoctor == doctor.CPF).ToList();
+            var doctorAppointments = appointmentsList.Where(a => a.DoctorId == doctor.Id).ToList();
 
             getDoctorDto.Appointments = doctorAppointments.Select(a => new AppointmentModel
             {
-                IdDoctor = a.IdDoctor, IdPatient = a.IdPatient, Description = a.Description, Id = a.Id
+                DoctorId = a.DoctorId, PatientId = a.PatientId, Description = a.Description, Id = a.Id
             }).ToList();
             doctorDtoList.Add(getDoctorDto);
         }
 
         // todo: error treatment
-        
+
         if (status != null)
         {
             doctorDtoList = doctorDtoList.Where(p => p.StatusInSystem == status).ToList();
@@ -60,18 +61,20 @@ public class DoctorController : Controller
     }
 
     [HttpGet]
-    [Route("{cpf}")]
-    public ActionResult GetDoctorByCPF([FromRoute] string cpf)
+    [Route("{id}")]
+    public ActionResult<GetDoctorDto> GetDoctorByCPF([FromRoute] int id)
     {
-        DoctorModel doctorModel = _labMedicineContext.Doctors.Where(d => d.CPF == cpf).FirstOrDefault();
+        DoctorModel doctorModel = _labMedicineContext.Doctors.Find(id);
         var appointmentsList = _labMedicineContext.Appointments.ToList();
 
         if (doctorModel == null)
         {
             return NotFound("Médico não encontrado!");
         }
+
         var getDoctorDto = new GetDoctorDto();
 
+        getDoctorDto.Id = doctorModel.Id;
         getDoctorDto.Name = doctorModel.Name;
         getDoctorDto.Gender = doctorModel.Gender;
         getDoctorDto.BirthDate = doctorModel.BirthDate;
@@ -83,20 +86,19 @@ public class DoctorController : Controller
         getDoctorDto.StatusInSystem = doctorModel.StatusInSystem;
         getDoctorDto.AppointmentCount = doctorModel.AppointmentCount;
 
-        var doctorAppointments = appointmentsList.Where(a => a.IdDoctor == getDoctorDto.CPF).ToList();
+        var doctorAppointments = appointmentsList.Where(a => a.DoctorId == getDoctorDto.Id).ToList();
 
         getDoctorDto.Appointments = doctorAppointments.Select(a => new AppointmentModel
         {
-            IdDoctor = a.IdDoctor, IdPatient = a.IdPatient, Description = a.Description, Id = a.Id
+            DoctorId = a.DoctorId, PatientId = a.PatientId, Description = a.Description, Id = a.Id
         }).ToList();
 
         return Ok(getDoctorDto);
-
     }
 
 
     [HttpPost]
-    public ActionResult DoctorPost([FromBody] DoctorDto doctorDto)
+    public ActionResult<DoctorDto> DoctorPost([FromBody] DoctorDto doctorDto)
     {
         var doctorExists = _labMedicineContext.Doctors.Any(d => d.CPF == doctorDto.CPF);
 
@@ -106,7 +108,7 @@ public class DoctorController : Controller
         }
 
         DoctorModel doctorModel = new();
-
+        
         doctorModel.Name = doctorDto.Name;
         doctorModel.Gender = doctorDto.Gender;
         doctorModel.BirthDate = doctorDto.BirthDate;
@@ -129,10 +131,10 @@ public class DoctorController : Controller
     }
 
     [HttpPut]
-    [Route("{cpf}")]
-    public ActionResult UpdateDoctor([FromRoute] string cpf, [FromBody] DoctorDto doctorDto)
+    [Route("{id}")]
+    public ActionResult<DoctorDto> UpdateDoctor([FromRoute] int id, [FromBody] DoctorDto doctorDto)
     {
-        DoctorModel doctorModel = _labMedicineContext.Doctors.Where(d => d.CPF == cpf).FirstOrDefault();
+        DoctorModel doctorModel = _labMedicineContext.Doctors.Find(id);
 
         if (doctorModel == null)
         {
@@ -161,10 +163,10 @@ public class DoctorController : Controller
     }
 
     [HttpPatch]
-    [Route("{cpf}/status")]
-    public ActionResult UpdateDoctorStatus([FromRoute] string cpf, [FromBody] PatchDoctorDto patchDoctorDto)
+    [Route("{id}/status")]
+    public ActionResult<PatchDoctorDto> UpdateDoctorStatus([FromRoute] int id, [FromBody] PatchDoctorDto patchDoctorDto)
     {
-        DoctorModel doctorModel = _labMedicineContext.Doctors.Where(d => d.CPF == cpf).FirstOrDefault();
+        DoctorModel doctorModel = _labMedicineContext.Doctors.Find(id);
 
         if (doctorModel == null)
         {
@@ -172,22 +174,21 @@ public class DoctorController : Controller
         }
 
         doctorModel.StatusInSystem = patchDoctorDto.StatusInSystem;
-        
+
         _labMedicineContext.Attach(doctorModel);
         _labMedicineContext.SaveChanges();
         return Ok(patchDoctorDto);
     }
 
     [HttpDelete]
-    [Route("{cpf}")]
-    public ActionResult DeleteDoctor([FromRoute] string cpf)
+    [Route("{id}")]
+    public ActionResult DeleteDoctor([FromRoute] int id)
     {
-        var doctorToRemove = _labMedicineContext.Doctors.Where(d => d.CPF == cpf).FirstOrDefault();
-
+        var doctorToRemove = _labMedicineContext.Doctors.Find(id);
+        
         if (doctorToRemove == null)
         {
             return NotFound("Médico não encontrado.");
-            
         }
 
         _labMedicineContext.Remove(doctorToRemove);

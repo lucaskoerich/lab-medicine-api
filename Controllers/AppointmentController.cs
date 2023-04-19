@@ -16,11 +16,10 @@ public class AppointmentController : Controller
     }
 
     [HttpPut]
-    public ActionResult<AppointmentDto> PostAppointment([FromBody] AppointmentDto appointmentDto)
+    public ActionResult<AppointmentDto> NewAppointment([FromBody] AppointmentDto appointmentDto)
     {
-        var doctor = _labMedicineContext.Doctors.Where(d => d.CPF == appointmentDto.CpfDoctor).FirstOrDefault();
-        var patient = _labMedicineContext.Patients.Where(p => p.CPF == appointmentDto.CpfPatient).FirstOrDefault();
-
+        var doctor = _labMedicineContext.Doctors.Where(d => d.Id == appointmentDto.DoctorId).FirstOrDefault();
+        var patient = _labMedicineContext.Patients.Where(p => p.Id == appointmentDto.PatientId).FirstOrDefault();
 
         if (doctor == null)
         {
@@ -37,13 +36,13 @@ public class AppointmentController : Controller
             return NotFound("Paciente não encontrado.");
         }
 
-        appointmentDto.CpfDoctor = doctor.CPF;
-        appointmentDto.CpfPatient = patient.CPF;
+        appointmentDto.DoctorId = doctor.Id;
+        appointmentDto.PatientId = patient.Id;
         
         AppointmentModel appointmentModel = new();
         
-        appointmentModel.IdDoctor = appointmentDto.CpfDoctor;
-        appointmentModel.IdPatient = appointmentDto.CpfPatient;
+        appointmentModel.DoctorId = appointmentDto.DoctorId;
+        appointmentModel.PatientId = appointmentDto.PatientId;
         appointmentModel.Description = appointmentDto.Description;
         
         patient.AttendanceStatus = AttendanceStatus.ATENDIDO;
