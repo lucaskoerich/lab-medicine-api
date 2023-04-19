@@ -23,6 +23,7 @@ public abstract class PersonModel
 
     [Column("CPF")]
     [Required(ErrorMessage = "CPF não pode ser vazio!")]
+    [RegularExpression(@"^\d{11}$", ErrorMessage = "CPF deve conter apenas 11 dígitos.")]
     [Index(IsUnique = true)]
     public string CPF { get; set; }
 

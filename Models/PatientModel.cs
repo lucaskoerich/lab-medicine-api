@@ -17,7 +17,7 @@ public class PatientModel : PersonModel
     [Column("INSURANCE")] public string? Insurance { get; set; }
 
     [Column("ATTENDANCE_STATUS"), Required]
-    public string AttendanceStatus { get; set; }
+    public AttendanceStatus AttendanceStatus { get; set; }
 
     [Column("APPOINTMENT_COUNT"), Required]
     public int AppointmentCount { get; set; }

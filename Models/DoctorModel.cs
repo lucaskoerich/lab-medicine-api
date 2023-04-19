@@ -10,16 +10,21 @@ public class DoctorModel : PersonModel
     [Required(AllowEmptyStrings = false, ErrorMessage = "Instituição de Ensino da Formação não pode ser vazio!")]
     public string EducationalInstitution { get; set; }
 
-    [Column("CRM_UF")][Required(AllowEmptyStrings = false, ErrorMessage = "CRM/UF não pode ser vazio!")] public string CrmUf { get; set; }
+    [Column("CRM_UF")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "CRM/UF não pode ser vazio!")]
+    public string CrmUf { get; set; }
 
-    [Column("CLINICAL_SPECIALIZATION"), Required]
+    [Column("CLINICAL_SPECIALIZATION")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Especilização Clínica não pode ser vazio!")]
     public ClinicalSpecialization ClinicalSpecialization { get; set; }
+    
+    [Column("STATUS_IN_SYSTEM")]
+    [Required(AllowEmptyStrings = false)]
+    public StatusInSystem StatusInSystem { get; set; }
 
-    [Column("STATUS_IN_SYSTEM"), Required] public StatusInSystem StatusInSystem { get; set; }
-
-    [Column("APPOINTMENT_COUNT"), Required]
+    [Column("APPOINTMENT_COUNT")]
+    [Required]
     public int AppointmentCount { get; set; }
 
-    [Column("APPOINTMENTS")]
-    public ICollection<AppointmentModel> Appointments { get; set; } = new List<AppointmentModel>();
+    [Column("APPOINTMENTS")] public ICollection<AppointmentModel> Appointments { get; set; } = new List<AppointmentModel>();
 }
