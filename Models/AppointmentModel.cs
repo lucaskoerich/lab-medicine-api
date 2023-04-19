@@ -10,11 +10,11 @@ public class AppointmentModel
 
     [Column("ID_PATIENT")]
     [ForeignKey("PatientModel")]
-    public string IdPatient { get; set; }
+    public int PatientId { get; set; }
 
     [Column("ID_DOCTOR")]
     [ForeignKey("DoctorModel")]
-    public string IdDoctor { get; set; }
+    public int DoctorId { get; set; }
 
     [Column("DESCRIPTION")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Descrição da consulta não pode ser vazia.")]
