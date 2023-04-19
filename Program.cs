@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using lab_medicine_api.Models;
+using lab_medicine_api.Seeders;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,19 @@ string connectionString = "Server=LUCAS\\SQLEXPRESS;Database=labmedicinebd;Trust
 builder.Services.AddDbContext<LabMedicineContext>(o => o.UseSqlServer(connectionString));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<LabMedicineContext>();
+    var patientSeeder = new PatientSeeder(context);
+    var doctorSeeder = new DoctorSeeder(context);
+    var nurseSeeder = new NurseSeeder(context);
+    
+    patientSeeder.Seed(context);
+    doctorSeeder.Seed(context);
+    nurseSeeder.Seed(context);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
