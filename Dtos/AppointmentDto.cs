@@ -6,10 +6,10 @@ namespace lab_medicine_api.Dtos;
 public class AppointmentDto
 {
     [ForeignKey("PatientModel")]
-    public string CpfPatient { get; set; }
+    public int PatientId { get; set; }
 
     [ForeignKey("DoctorModel")]
-    public string CpfDoctor { get; set; }
+    public int DoctorId { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "Descrição da consulta não pode ser vazia.")]
     public string Description { get; set; }

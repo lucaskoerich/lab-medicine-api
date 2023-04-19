@@ -5,7 +5,7 @@ namespace lab_medicine_api.Dtos;
 
 public abstract class PersonDto
 {
-    // [Column("ID"), Key] public int Id { get; set; }
+    [Column("ID")][Key] public int Id { get; set; }
 
     [Column("NAME")]
     [Required(ErrorMessage = "Nome não pode ser vazio!")]

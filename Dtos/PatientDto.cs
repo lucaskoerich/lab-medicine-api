@@ -23,7 +23,6 @@ public class PatientDto : PersonDto
     public ICollection<AppointmentModel> Appointments { get; set; }
 }
 
-
 public class PatchPatientDto
 {
     [Required(ErrorMessage = "Status do atendimento é necessário.")]
