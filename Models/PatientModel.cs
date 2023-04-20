@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using lab_medicine_api.Enums;
+using lab_medicine_api.Validations;
 
 namespace lab_medicine_api.Models;
 
@@ -16,12 +19,13 @@ public class PatientModel : PersonModel
     [Column("SPECIFIC_CARE")] public List<string>? SpecificCares { get; set; } = new();
     [Column("INSURANCE")] public string? Insurance { get; set; }
 
-    [Column("ATTENDANCE_STATUS"), Required]
+    [Column("ATTENDANCE_STATUS")]
+    [Required(ErrorMessage = "Status de Atedimento não pode ser vazio!")]
+    [JsonConverter(typeof(CustomValidation.AttendanceStatusConverter))]
     public AttendanceStatus AttendanceStatus { get; set; }
 
     [Column("APPOINTMENT_COUNT"), Required]
     public int AppointmentCount { get; set; }
 
-    [Column("APPOINTMENTS")]
-    public ICollection<AppointmentModel> Appointments { get; set; } = new List<AppointmentModel>();
+    [Column("APPOINTMENTS")] public ICollection<AppointmentModel> Appointments { get; set; } = new List<AppointmentModel>();
 }

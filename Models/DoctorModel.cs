@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using lab_medicine_api.Enums;
+using lab_medicine_api.Validations;
 
 namespace lab_medicine_api.Models;
 
@@ -16,10 +19,12 @@ public class DoctorModel : PersonModel
 
     [Column("CLINICAL_SPECIALIZATION")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Especilização Clínica não pode ser vazio!")]
+    [JsonConverter(typeof(CustomValidation.ClinicalSpecializationConverter))]
     public ClinicalSpecialization ClinicalSpecialization { get; set; }
     
     [Column("STATUS_IN_SYSTEM")]
     [Required(AllowEmptyStrings = false)]
+    [JsonConverter(typeof(CustomValidation.StatusInSystemConverter))]
     public StatusInSystem StatusInSystem { get; set; }
 
     [Column("APPOINTMENT_COUNT")]
