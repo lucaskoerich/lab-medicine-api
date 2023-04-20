@@ -120,7 +120,7 @@ public class PatientController : Controller
         patientModel.Allergies = postPatientDto.Allergies;
         patientModel.SpecificCares = postPatientDto.SpecificCares;
         patientModel.Insurance = postPatientDto.Insurance;
-        patientModel.AttendanceStatus = AttendanceStatus.AGUARDANDO_ATENDIMENTO;
+        patientModel.AttendanceStatus = postPatientDto.AttendanceStatus;
 
         if (!TryValidateModel(patientModel))
         {

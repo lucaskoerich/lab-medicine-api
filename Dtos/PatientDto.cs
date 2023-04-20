@@ -44,4 +44,8 @@ public class PostPatientDto : PersonDto
     public List<string>? Allergies { get; set; }
     public List<string>? SpecificCares { get; set; }
     public string? Insurance { get; set; }
+    
+    [Required(ErrorMessage = "Status de Atendimento não pode ser vazio!")]
+    [JsonConverter(typeof(CustomValidation.AttendanceStatusConverter))]
+    public AttendanceStatus AttendanceStatus { get; set; }
 }
