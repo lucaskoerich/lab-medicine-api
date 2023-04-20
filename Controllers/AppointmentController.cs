@@ -1,4 +1,5 @@
 ﻿using lab_medicine_api.Dtos;
+using lab_medicine_api.Enums;
 using lab_medicine_api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,48 +19,44 @@ public class AppointmentController : Controller
     [HttpPut]
     public ActionResult<AppointmentDto> NewAppointment([FromBody] AppointmentDto appointmentDto)
     {
-        var doctor = _labMedicineContext.Doctors.Where(d => d.Id == appointmentDto.DoctorId).FirstOrDefault();
-        var patient = _labMedicineContext.Patients.Where(p => p.Id == appointmentDto.PatientId).FirstOrDefault();
+        var doctor = _labMedicineContext.Doctors.Where(d => d.Id == appointmentDto.DoctorModelId).FirstOrDefault();
+        var patient = _labMedicineContext.Patients.Where(p => p.Id == appointmentDto.PatientModelId).FirstOrDefault();
 
         if (doctor == null)
         {
-            return NotFound("Médico não encontrado.");
+            return StatusCode(404, "Médico não encontrado.");
         }
 
         if (doctor.StatusInSystem == StatusInSystem.INATIVO)
         {
-            return BadRequest("Médico se encontra inativo no sistema.");
+            return StatusCode(400, "Médico se encontra inativo no sistema.");
         }
 
         if (patient == null)
         {
-            return NotFound("Paciente não encontrado.");
+            return StatusCode(404, "Paciente não encontrado.");
         }
 
-        appointmentDto.DoctorId = doctor.Id;
-        appointmentDto.PatientId = patient.Id;
-        
+        appointmentDto.DoctorModelId = doctor.Id;
+        appointmentDto.PatientModelId = patient.Id;
+
         AppointmentModel appointmentModel = new();
-        
-        appointmentModel.DoctorId = appointmentDto.DoctorId;
-        appointmentModel.PatientId = appointmentDto.PatientId;
+
+        appointmentModel.DoctorModelId = appointmentDto.DoctorModelId;
+        appointmentModel.PatientModelId = appointmentDto.PatientModelId;
         appointmentModel.Description = appointmentDto.Description;
-        
+
         patient.AttendanceStatus = AttendanceStatus.ATENDIDO;
 
         doctor.AppointmentCount++;
         patient.AppointmentCount++;
 
-        if (TryValidateModel(appointmentModel))
-        {
-            _labMedicineContext.Add(appointmentModel);
-            _labMedicineContext.Attach(doctor);
-            _labMedicineContext.Attach(patient);
-            _labMedicineContext.SaveChanges();
 
-            return Ok(appointmentDto);
-        }
+        _labMedicineContext.Add(appointmentModel);
+        _labMedicineContext.Attach(doctor);
+        _labMedicineContext.Attach(patient);
+        _labMedicineContext.SaveChanges();
 
-        return BadRequest("Há campos preenchidos de forma incorreta.");
+        return StatusCode(200, appointmentDto);
     }
 }

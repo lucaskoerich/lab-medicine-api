@@ -1,4 +1,5 @@
 ﻿using lab_medicine_api.Dtos;
+using lab_medicine_api.Enums;
 using lab_medicine_api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,150 +17,158 @@ public class DoctorController : Controller
     }
 
     [HttpGet]
-    public ActionResult<List<GetDoctorDto>> GetDoctors([FromQuery] StatusInSystem? status)
+    public ActionResult<List<DoctorDto>> GetDoctors([FromQuery] StatusInSystem? status)
     {
         var doctorModelList = _labMedicineContext.Doctors;
         var appointmentsList = _labMedicineContext.Appointments.ToList();
 
-        List<GetDoctorDto> doctorDtoList = new();
+        List<DoctorDto> doctorDtoList = new();
 
         foreach (var doctor in doctorModelList)
         {
-            var getDoctorDto = new GetDoctorDto();
+            var doctorDto = new DoctorDto();
 
-            getDoctorDto.Id = doctor.Id;
-            getDoctorDto.Name = doctor.Name;
-            getDoctorDto.Gender = doctor.Gender;
-            getDoctorDto.BirthDate = doctor.BirthDate;
-            getDoctorDto.CPF = doctor.CPF;
-            getDoctorDto.PhoneNumber = doctor.PhoneNumber;
-            getDoctorDto.EducationalInstitution = doctor.EducationalInstitution;
-            getDoctorDto.CrmUf = doctor.CrmUf;
-            getDoctorDto.ClinicalSpecialization = doctor.ClinicalSpecialization;
-            getDoctorDto.StatusInSystem = doctor.StatusInSystem;
-            getDoctorDto.AppointmentCount = doctor.AppointmentCount;
+            doctorDto.Id = doctor.Id;
+            doctorDto.Name = doctor.Name;
+            doctorDto.Gender = doctor.Gender;
+            doctorDto.BirthDate = doctor.BirthDate;
+            doctorDto.CPF = doctor.CPF;
+            doctorDto.PhoneNumber = doctor.PhoneNumber;
+            doctorDto.EducationalInstitution = doctor.EducationalInstitution;
+            doctorDto.CrmUf = doctor.CrmUf;
+            doctorDto.ClinicalSpecialization = doctor.ClinicalSpecialization;
+            doctorDto.StatusInSystem = doctor.StatusInSystem;
+            doctorDto.AppointmentCount = doctor.AppointmentCount;
 
 
-            var doctorAppointments = appointmentsList.Where(a => a.DoctorId == doctor.Id).ToList();
+            var doctorAppointments = appointmentsList.Where(a => a.DoctorModelId == doctor.Id).ToList();
 
-            getDoctorDto.Appointments = doctorAppointments.Select(a => new AppointmentModel
+            //gets all appointments and adds them to the appointments list
+            doctorDto.Appointments = doctorAppointments.Select(a => new AppointmentModel
             {
-                DoctorId = a.DoctorId, PatientId = a.PatientId, Description = a.Description, Id = a.Id
+                DoctorModelId = a.DoctorModelId, PatientModelId = a.PatientModelId, Description = a.Description, Id = a.Id
             }).ToList();
-            doctorDtoList.Add(getDoctorDto);
+            doctorDtoList.Add(doctorDto);
         }
-
-        // todo: error treatment
 
         if (status != null)
         {
             doctorDtoList = doctorDtoList.Where(p => p.StatusInSystem == status).ToList();
-            return Ok(doctorDtoList);
+            return StatusCode(200, doctorDtoList);
         }
 
-        return Ok(doctorDtoList);
+        return StatusCode(200, doctorDtoList);
     }
 
     [HttpGet]
     [Route("{id}")]
-    public ActionResult<GetDoctorDto> GetDoctorByCPF([FromRoute] int id)
+    public ActionResult<DoctorDto> GetDoctorByCPF([FromRoute] int id)
     {
         DoctorModel doctorModel = _labMedicineContext.Doctors.Find(id);
         var appointmentsList = _labMedicineContext.Appointments.ToList();
 
         if (doctorModel == null)
         {
-            return NotFound("Médico não encontrado!");
+            return StatusCode(404, "Médico não encontrado!");
         }
 
-        var getDoctorDto = new GetDoctorDto();
+        var doctorDto = new DoctorDto();
 
-        getDoctorDto.Id = doctorModel.Id;
-        getDoctorDto.Name = doctorModel.Name;
-        getDoctorDto.Gender = doctorModel.Gender;
-        getDoctorDto.BirthDate = doctorModel.BirthDate;
-        getDoctorDto.CPF = doctorModel.CPF;
-        getDoctorDto.PhoneNumber = doctorModel.PhoneNumber;
-        getDoctorDto.EducationalInstitution = doctorModel.EducationalInstitution;
-        getDoctorDto.CrmUf = doctorModel.CrmUf;
-        getDoctorDto.ClinicalSpecialization = doctorModel.ClinicalSpecialization;
-        getDoctorDto.StatusInSystem = doctorModel.StatusInSystem;
-        getDoctorDto.AppointmentCount = doctorModel.AppointmentCount;
+        doctorDto.Id = doctorModel.Id;
+        doctorDto.Name = doctorModel.Name;
+        doctorDto.Gender = doctorModel.Gender;
+        doctorDto.BirthDate = doctorModel.BirthDate;
+        doctorDto.CPF = doctorModel.CPF;
+        doctorDto.PhoneNumber = doctorModel.PhoneNumber;
+        doctorDto.EducationalInstitution = doctorModel.EducationalInstitution;
+        doctorDto.CrmUf = doctorModel.CrmUf;
+        doctorDto.ClinicalSpecialization = doctorModel.ClinicalSpecialization;
+        doctorDto.StatusInSystem = doctorModel.StatusInSystem;
+        doctorDto.AppointmentCount = doctorModel.AppointmentCount;
 
-        var doctorAppointments = appointmentsList.Where(a => a.DoctorId == getDoctorDto.Id).ToList();
+        var doctorAppointments = appointmentsList.Where(a => a.DoctorModelId == doctorDto.Id).ToList();
 
-        getDoctorDto.Appointments = doctorAppointments.Select(a => new AppointmentModel
+        //gets all appointments and adds them to the appointments list
+        doctorDto.Appointments = doctorAppointments.Select(a => new AppointmentModel
         {
-            DoctorId = a.DoctorId, PatientId = a.PatientId, Description = a.Description, Id = a.Id
+            DoctorModelId = a.DoctorModelId, PatientModelId = a.PatientModelId, Description = a.Description, Id = a.Id
         }).ToList();
 
-        return Ok(getDoctorDto);
+        return StatusCode(200, doctorDto);
     }
 
-
     [HttpPost]
-    public ActionResult<DoctorDto> DoctorPost([FromBody] DoctorDto doctorDto)
+    public ActionResult<PostDoctorDto> DoctorPost([FromBody] PostDoctorDto postDoctorDto)
     {
-        var doctorExists = _labMedicineContext.Doctors.Any(d => d.CPF == doctorDto.CPF);
+        var doctorExists = _labMedicineContext.Persons.Any(d => d.CPF == postDoctorDto.CPF);
 
         if (doctorExists)
         {
-            return Conflict("Médico já está cadastrado no sistema.");
+            return StatusCode(409, "Médico já está cadastrado no sistema.");
         }
 
         DoctorModel doctorModel = new();
-        
-        doctorModel.Name = doctorDto.Name;
-        doctorModel.Gender = doctorDto.Gender;
-        doctorModel.BirthDate = doctorDto.BirthDate;
-        doctorModel.CPF = doctorDto.CPF;
-        doctorModel.PhoneNumber = doctorDto.PhoneNumber;
-        doctorModel.EducationalInstitution = doctorDto.EducationalInstitution;
-        doctorModel.CrmUf = doctorDto.CrmUf;
-        doctorModel.ClinicalSpecialization = doctorDto.ClinicalSpecialization;
-        doctorModel.StatusInSystem = doctorDto.StatusInSystem;
 
-        if (TryValidateModel(doctorModel))
+        doctorModel.Name = postDoctorDto.Name;
+        doctorModel.Gender = postDoctorDto.Gender;
+        doctorModel.BirthDate = postDoctorDto.BirthDate;
+        doctorModel.CPF = postDoctorDto.CPF;
+        doctorModel.PhoneNumber = postDoctorDto.PhoneNumber;
+        doctorModel.EducationalInstitution = postDoctorDto.EducationalInstitution;
+        doctorModel.CrmUf = postDoctorDto.CrmUf;
+        doctorModel.ClinicalSpecialization = postDoctorDto.ClinicalSpecialization;
+        doctorModel.StatusInSystem = postDoctorDto.StatusInSystem;
+
+        if (!TryValidateModel(doctorModel))
         {
-            _labMedicineContext.Add(doctorModel);
-            _labMedicineContext.SaveChanges();
-
-            return Created(Request.Path, doctorDto);
+            return StatusCode(400, "Há campos não preenchidos da forma correta.");
         }
 
-        return BadRequest("Há campos não preenchidos da forma correta.");
+        _labMedicineContext.Add(doctorModel);
+        _labMedicineContext.SaveChanges();
+
+        var returnBody = new { identificador = doctorModel.Id, atendimentos = doctorModel.Appointments };
+
+        return StatusCode(201, new { postDoctorDto, returnBody });
     }
 
     [HttpPut]
     [Route("{id}")]
-    public ActionResult<DoctorDto> UpdateDoctor([FromRoute] int id, [FromBody] DoctorDto doctorDto)
+    public ActionResult<PostDoctorDto> UpdateDoctor([FromRoute] int id, [FromBody] PostDoctorDto updateDoctorDto)
     {
         DoctorModel doctorModel = _labMedicineContext.Doctors.Find(id);
 
         if (doctorModel == null)
         {
-            return NotFound("Médico não encontrado.");
+            return StatusCode(404, "Médico não encontrado.");
         }
 
-        doctorModel.Name = doctorDto.Name;
-        doctorModel.Gender = doctorDto.Gender;
-        doctorModel.BirthDate = doctorDto.BirthDate;
-        doctorModel.CPF = doctorDto.CPF;
-        doctorModel.PhoneNumber = doctorDto.PhoneNumber;
-        doctorModel.EducationalInstitution = doctorDto.EducationalInstitution;
-        doctorModel.CrmUf = doctorDto.CrmUf;
-        doctorModel.ClinicalSpecialization = doctorDto.ClinicalSpecialization;
-        doctorModel.StatusInSystem = doctorDto.StatusInSystem;
+        doctorModel.Name = updateDoctorDto.Name;
+        doctorModel.Gender = updateDoctorDto.Gender;
+        doctorModel.BirthDate = updateDoctorDto.BirthDate;
+        doctorModel.CPF = updateDoctorDto.CPF;
+        doctorModel.PhoneNumber = updateDoctorDto.PhoneNumber;
+        doctorModel.EducationalInstitution = updateDoctorDto.EducationalInstitution;
+        doctorModel.CrmUf = updateDoctorDto.CrmUf;
+        doctorModel.ClinicalSpecialization = updateDoctorDto.ClinicalSpecialization;
+        doctorModel.StatusInSystem = updateDoctorDto.StatusInSystem;
 
-        if (TryValidateModel(doctorDto))
+        var cpfExists = _labMedicineContext.Persons.Any(p => p.CPF == updateDoctorDto.CPF);
+
+        if (cpfExists)
+        {
+            return StatusCode(409, "CPF já está cadastrado no sistema.");
+        }
+
+        if (TryValidateModel(updateDoctorDto))
         {
             _labMedicineContext.Attach(doctorModel);
             _labMedicineContext.SaveChanges();
 
-            return Ok(doctorDto);
+            return StatusCode(200, updateDoctorDto);
         }
 
-        return BadRequest("Há campos não preenchidos da forma correta.");
+        return StatusCode(400, "Há campos não preenchidos da forma correta.");
     }
 
     [HttpPatch]
@@ -170,14 +179,14 @@ public class DoctorController : Controller
 
         if (doctorModel == null)
         {
-            return NotFound("Médico não encontrado.");
+            return StatusCode(404, "Médico não encontrado.");
         }
 
         doctorModel.StatusInSystem = patchDoctorDto.StatusInSystem;
 
         _labMedicineContext.Attach(doctorModel);
         _labMedicineContext.SaveChanges();
-        return Ok(patchDoctorDto);
+        return StatusCode(200, patchDoctorDto);
     }
 
     [HttpDelete]
@@ -185,14 +194,14 @@ public class DoctorController : Controller
     public ActionResult DeleteDoctor([FromRoute] int id)
     {
         var doctorToRemove = _labMedicineContext.Doctors.Find(id);
-        
+
         if (doctorToRemove == null)
         {
-            return NotFound("Médico não encontrado.");
+            return StatusCode(404, "Médico não encontrado.");
         }
 
         _labMedicineContext.Remove(doctorToRemove);
         _labMedicineContext.SaveChanges();
-        return NoContent();
+        return StatusCode(204);
     }
 }

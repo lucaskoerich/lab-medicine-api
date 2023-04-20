@@ -1,7 +1,7 @@
 ﻿using lab_medicine_api.Dtos;
+using lab_medicine_api.Enums;
 using lab_medicine_api.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace lab_medicine_api.Controllers;
 
@@ -33,6 +33,7 @@ public class PatientController : Controller
             patientDto.CPF = patient.CPF;
             patientDto.Gender = patient.Gender;
             patientDto.PhoneNumber = patient.PhoneNumber;
+            patientDto.BirthDate = patient.BirthDate;
             patientDto.EmergencyContact = patient.EmergencyContact;
             patientDto.Allergies = patient.Allergies;
             patientDto.SpecificCares = patient.SpecificCares;
@@ -40,35 +41,36 @@ public class PatientController : Controller
             patientDto.AttendanceStatus = patient.AttendanceStatus;
             patientDto.AppointmentCount = patient.AppointmentCount;
 
-            var patientAppointments = appointmentsList.Where(a => a.PatientId == patient.Id).ToList();
+            var patientAppointments = appointmentsList.Where(a => a.PatientModelId == patient.Id).ToList();
 
+            //gets all appointments and adds them to the appointments list
             patientDto.Appointments = patientAppointments.Select(a => new AppointmentModel
             {
-                DoctorId = a.DoctorId, PatientId = a.PatientId, Description = a.Description, Id = a.Id
+                DoctorModelId = a.DoctorModelId, PatientModelId = a.PatientModelId, Description = a.Description, Id = a.Id
             }).ToList();
 
             patientDtoList.Add(patientDto);
         }
 
-        if (status != null)
+        if (status == null)
         {
-            patientDtoList = patientDtoList.Where(p => p.AttendanceStatus == status).ToList();
-            return Ok(patientDtoList);
+            return StatusCode(200, patientDtoList);
         }
 
-        return Ok(patientDtoList);
+        patientDtoList = patientDtoList.Where(p => p.AttendanceStatus == status).ToList();
+        return StatusCode(200, patientDtoList);
     }
 
     [HttpGet]
     [Route("{id}")]
-    public ActionResult GetPatientByID([FromRoute] int id)
+    public ActionResult<PatientDto> GetPatientByID([FromRoute] int id)
     {
         PatientModel patientModel = _labMedicineContext.Patients.Where(P => P.Id == id).FirstOrDefault();
         var appointmentsList = _labMedicineContext.Appointments.ToList();
 
         if (patientModel == null)
         {
-            return NotFound("Paciente não encontrado!");
+            return StatusCode(404, "Paciente não encontrado!");
         }
 
         var patientDto = new PatientDto();
@@ -78,36 +80,37 @@ public class PatientController : Controller
         patientDto.CPF = patientModel.CPF;
         patientDto.Gender = patientModel.Gender;
         patientDto.PhoneNumber = patientModel.PhoneNumber;
+        patientDto.BirthDate = patientModel.BirthDate;
         patientDto.EmergencyContact = patientModel.EmergencyContact;
         patientDto.Allergies = patientModel.Allergies;
         patientDto.SpecificCares = patientModel.SpecificCares;
         patientDto.Insurance = patientModel.Insurance;
         patientDto.AttendanceStatus = patientModel.AttendanceStatus;
         patientDto.AppointmentCount = patientModel.AppointmentCount;
-        
-        var patientAppointments = appointmentsList.Where(a => a.PatientId == patientDto.Id).ToList(); 
 
-        patientDto.Appointments = patientAppointments.Select(a => new AppointmentModel
+        var patientAppointments = appointmentsList.Where(a => a.PatientModelId == patientDto.Id).ToList();
+
+        //gets all appointments and adds them to the appointments list
+        patientDto.Appointments = patientAppointments.Select(a => new AppointmentModel()
         {
-            DoctorId = a.DoctorId, PatientId = a.PatientId, Description = a.Description, Id = a.Id
+            DoctorModelId = a.DoctorModelId, PatientModelId = a.PatientModelId, Description = a.Description, Id = a.Id
         }).ToList();
 
-        return Ok(patientDto);
+        return StatusCode(200, patientDto);
     }
-
 
     [HttpPost]
     public ActionResult<PostPatientDto> PostPatient([FromBody] PostPatientDto postPatientDto)
     {
-        var patientExists = _labMedicineContext.Patients.Any(p => p.CPF == postPatientDto.CPF);
+        var patientExists = _labMedicineContext.Persons.Any(p => p.CPF == postPatientDto.CPF);
 
         if (patientExists)
         {
-            return Conflict("CPF já cadastrado no sistema.");
+            return StatusCode(409, "CPF já cadastrado no sistema.");
         }
 
         PatientModel patientModel = new();
-        
+
         patientModel.Name = postPatientDto.Name;
         patientModel.Gender = postPatientDto.Gender;
         patientModel.BirthDate = postPatientDto.BirthDate;
@@ -119,18 +122,18 @@ public class PatientController : Controller
         patientModel.Insurance = postPatientDto.Insurance;
         patientModel.AttendanceStatus = AttendanceStatus.AGUARDANDO_ATENDIMENTO;
 
-
-        if (TryValidateModel(patientModel))
+        if (!TryValidateModel(patientModel))
         {
-            _labMedicineContext.Add(patientModel);
-            _labMedicineContext.SaveChanges();
-
-            return Created(Request.Path, postPatientDto);
+            return StatusCode(400, "Há campos preenchidos de forma incorreta.");
         }
 
-        return BadRequest("Há campos preenchidos de forma incorreta.");
-    }
+        _labMedicineContext.Add(patientModel);
+        _labMedicineContext.SaveChanges();
 
+        var returnBody = new { identificador = patientModel.Id, atendimentos = patientModel.Appointments };
+
+        return StatusCode(201, new { postPatientDto, returnBody });
+    }
 
     [HttpPut]
     [Route("{id}")]
@@ -140,7 +143,7 @@ public class PatientController : Controller
 
         if (patientModel == null)
         {
-            return NotFound("Paciente não encontrado.");
+            return StatusCode(404, "Paciente não encontrado.");
         }
 
         patientModel.Name = updatePatientDto.Name;
@@ -153,16 +156,22 @@ public class PatientController : Controller
         patientModel.SpecificCares = updatePatientDto.SpecificCares;
         patientModel.Insurance = updatePatientDto.Insurance;
 
-        if (TryValidateModel(updatePatientDto))
+        var cpfExists = _labMedicineContext.Persons.Any(p => p.CPF == updatePatientDto.CPF);
+
+        if (cpfExists)
         {
-            _labMedicineContext.Attach(updatePatientDto);
-            _labMedicineContext.SaveChanges();
-            return Ok(updatePatientDto);
+            return StatusCode(409, "CPF já está cadastrado no sistema.");
         }
 
-        return BadRequest("Há campos preenchidos de forma incorreta.");
-    }
+        if (TryValidateModel(updatePatientDto))
+        {
+            _labMedicineContext.Attach(patientModel);
+            _labMedicineContext.SaveChanges();
+            return StatusCode(200, updatePatientDto);
+        }
 
+        return StatusCode(400, "Há campos preenchidos de forma incorreta.");
+    }
 
     [HttpPatch]
     [Route("{id}/status")]
@@ -170,16 +179,16 @@ public class PatientController : Controller
     {
         PatientModel patientModel = _labMedicineContext.Patients.Find(id);
 
-        if (patientModel != null)
+        if (patientModel == null)
         {
-            patientModel.AttendanceStatus = patchPatientDto.AttendanceStatus;
-
-            _labMedicineContext.Attach(patientModel);
-            _labMedicineContext.SaveChanges();
-            return Ok(patchPatientDto);
+            return StatusCode(404, "Paciente não encontrado.");
         }
 
-        return NotFound("Paciente não encontrado.");
+        patientModel.AttendanceStatus = patchPatientDto.AttendanceStatus;
+
+        _labMedicineContext.Attach(patientModel);
+        _labMedicineContext.SaveChanges();
+        return StatusCode(200, patchPatientDto);
     }
 
     [HttpDelete]
@@ -190,11 +199,11 @@ public class PatientController : Controller
 
         if (patientToRemove == null)
         {
-            return NotFound("Paciente não encontrado.");
+            return StatusCode(404, "Paciente não encontrado.");
         }
 
         _labMedicineContext.Remove(patientToRemove);
         _labMedicineContext.SaveChanges();
-        return NoContent();
+        return StatusCode(204);
     }
 }
