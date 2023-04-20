@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using lab_medicine_api.Models;
 
@@ -11,9 +12,11 @@ using lab_medicine_api.Models;
 namespace lab_medicine_api.Migrations
 {
     [DbContext(typeof(LabMedicineContext))]
-    partial class LabMedicineContextModelSnapshot : ModelSnapshot
+    [Migration("20230420225830_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
