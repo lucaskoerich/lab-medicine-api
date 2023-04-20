@@ -6,29 +6,17 @@ namespace lab_medicine_api.Seeders;
 
 public class PatientSeeder
 {
-    private readonly LabMedicineContext _labMedicineContext;
-
-    public PatientSeeder(LabMedicineContext labMedicineContext)
+    public List<PatientModel> Seed()
     {
-        _labMedicineContext = labMedicineContext;
-    }
-
-    public void Seed(LabMedicineContext context)
-    {
-        // Verifica se já existem pacientes na base de dados
-        if (_labMedicineContext.Patients.Any())
-        {
-            return; // Dados já foram adicionados
-        }
-
         var patients = new List<PatientModel>
         {
-            new PatientModel
+            new ()
             {
+                Id = 1,
                 Name = "João Silva",
                 Gender = "Masculino",
                 BirthDate = new DateTime(1985, 10, 15, 22, 15, 58),
-                CPF = "12345678901",
+                CPF = "12874145871",
                 PhoneNumber = "91986850045",
                 EmergencyContact = "91365777069",
                 Allergies = new List<string> { "Amendoim", "Aspirina" },
@@ -36,18 +24,15 @@ public class PatientSeeder
                 Insurance = "Amil",
                 AttendanceStatus = AttendanceStatus.ATENDIDO,
                 AppointmentCount = 2,
-                Appointments = new List<AppointmentModel>
-                {
-                    new AppointmentModel { Description = "Consulta de rotina", DoctorId = 11, PatientId = 1 },
-                    new AppointmentModel { Description = "Exame de sangue", DoctorId = 12, PatientId = 1 }
-                }
+                Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 2,
                 Name = "Maria Santos",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1990, 05, 23),
-                CPF = "23456789012",
+                CPF = "65587414544",
                 PhoneNumber = "11987654322",
                 EmergencyContact = "69992556682",
                 Allergies = new List<string> { "Leite", "Penicilina" },
@@ -55,14 +40,15 @@ public class PatientSeeder
                 Insurance = "Unimed",
                 AttendanceStatus = AttendanceStatus.EM_ATENDIMENTO,
                 AppointmentCount = 1,
-                Appointments = new List<AppointmentModel> { new AppointmentModel { Description = "Consulta de rotina", DoctorId = 1, PatientId = 2 } }
+                Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 3,
                 Name = "Ana Paula Oliveira",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1982, 06, 12),
-                CPF = "34567890123",
+                CPF = "88748739057",
                 PhoneNumber = "11991234567",
                 EmergencyContact = "11987654321",
                 Allergies = new List<string> { "Frutos do mar", "Glúten" },
@@ -70,19 +56,15 @@ public class PatientSeeder
                 Insurance = "Bradesco Saúde",
                 AttendanceStatus = AttendanceStatus.ATENDIDO,
                 AppointmentCount = 3,
-                Appointments = new List<AppointmentModel>
-                {
-                    new AppointmentModel { Description = "Consulta de rotina", DoctorId = 12, PatientId = 3 },
-                    new AppointmentModel { Description = "Acompanhamento nutricional", DoctorId = 11, PatientId = 3 },
-                    new AppointmentModel { Description = "Consulta de alergia", DoctorId = 11, PatientId = 3 }
-                }
+                Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 4,
                 Name = "José da Silva",
                 Gender = "Masculino",
                 BirthDate = new DateTime(1975, 11, 02),
-                CPF = "45678901234",
+                CPF = "20070117004",
                 PhoneNumber = "21998765432",
                 EmergencyContact = "21987654321",
                 Allergies = new List<string> { "Abacaxi", "Ibuprofeno" },
@@ -90,18 +72,15 @@ public class PatientSeeder
                 Insurance = "SulAmérica Saúde",
                 AttendanceStatus = AttendanceStatus.ATENDIDO,
                 AppointmentCount = 2,
-                Appointments = new List<AppointmentModel>
-                {
-                    new AppointmentModel { Description = "Consulta de rotina", DoctorId = 12, PatientId = 4 },
-                    new AppointmentModel { Description = "Consulta para avaliação cardíaca", DoctorId = 12, PatientId = 4 }
-                }
+                Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 5,
                 Name = "Ana Souza",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1995, 3, 5),
-                CPF = "34567890123",
+                CPF = "94942452023",
                 PhoneNumber = "21987654321",
                 EmergencyContact = "21976453627",
                 Allergies = new List<string> { "Ampicilina", "Abacaxi" },
@@ -109,14 +88,15 @@ public class PatientSeeder
                 Insurance = "Bradesco Saúde",
                 AttendanceStatus = AttendanceStatus.AGUARDANDO_ATENDIMENTO,
                 AppointmentCount = 1,
-                Appointments = new List<AppointmentModel> { new AppointmentModel { Description = "Consulta de rotina", DoctorId = 12, PatientId = 5 } }
+                Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 6,
                 Name = "Pedro Oliveira",
                 Gender = "Masculino",
                 BirthDate = new DateTime(1970, 8, 13),
-                CPF = "45678901234",
+                CPF = "29061208041",
                 PhoneNumber = "31987654321",
                 EmergencyContact = "31974563215",
                 Allergies = new List<string> { "Frutos do mar", "Cacau" },
@@ -126,12 +106,13 @@ public class PatientSeeder
                 AppointmentCount = 0,
                 Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 7,
                 Name = "Fernanda Oliveira",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1995, 04, 25),
-                CPF = "56789012345",
+                CPF = "54175182047",
                 PhoneNumber = "81991234567",
                 EmergencyContact = "81987654321",
                 Allergies = new List<string> { "Nozes", "Leite" },
@@ -139,14 +120,15 @@ public class PatientSeeder
                 Insurance = "Golden Cross",
                 AttendanceStatus = AttendanceStatus.EM_ATENDIMENTO,
                 AppointmentCount = 1,
-                Appointments = new List<AppointmentModel> { new AppointmentModel { Description = "Consulta de rotina", DoctorId = 11, PatientId = 7 } }
+                Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 8,
                 Name = "Pedro Henrique Souza",
                 Gender = "Masculino",
                 BirthDate = new DateTime(1980, 12, 05),
-                CPF = "67890123456",
+                CPF = "44849054005",
                 PhoneNumber = "31991234567",
                 EmergencyContact = "31987654321",
                 Allergies = new List<string> { "Poeira", "Camarão" },
@@ -154,14 +136,15 @@ public class PatientSeeder
                 Insurance = "Amil",
                 AttendanceStatus = AttendanceStatus.AGUARDANDO_ATENDIMENTO,
                 AppointmentCount = 1,
-                Appointments = new List<AppointmentModel> { new AppointmentModel { Description = "Consulta de rotina", DoctorId = 12, PatientId = 8 } }
+                Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 9,
                 Name = "Sandra Silva",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1992, 03, 10),
-                CPF = "78901234567",
+                CPF = "87427425014",
                 PhoneNumber = "21991234567",
                 EmergencyContact = "21987654321",
                 Allergies = new List<string> { "Amendoim", "Aspirina" },
@@ -169,18 +152,15 @@ public class PatientSeeder
                 Insurance = "Unimed",
                 AttendanceStatus = AttendanceStatus.ATENDIDO,
                 AppointmentCount = 2,
-                Appointments = new List<AppointmentModel>
-                {
-                    new AppointmentModel { Description = "Consulta de rotina", DoctorId = 11, PatientId = 9 },
-                    new AppointmentModel { Description = "Exame de sangue", DoctorId = 12, PatientId = 9 }
-                }
+                Appointments = new List<AppointmentModel>()
             },
-            new PatientModel
+            new ()
             {
+                Id = 10,
                 Name = "Maria Joaquina",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1997, 03, 21),
-                CPF = "78901234567",
+                CPF = "98257694088",
                 PhoneNumber = "31987654321",
                 EmergencyContact = "31998765432",
                 Allergies = new List<string> { "Amendoim", "Lactose" },
@@ -192,6 +172,7 @@ public class PatientSeeder
             }
         };
         
+        //verifica se cada objeto da lista é válido antes de mandar pro bd
         foreach (var patient in patients)
         {
             var validationContext = new ValidationContext(patient);
@@ -203,13 +184,11 @@ public class PatientSeeder
                 {
                     Console.WriteLine(validationResult.ErrorMessage);
                 }
-                
+
                 throw new Exception("Há dados preenchidos de forma incorreta!");
             }
         }
-        
-        _labMedicineContext.Persons.AddRange(patients);
-        _labMedicineContext.SaveChanges();
-        
+
+        return patients;
     }
 }

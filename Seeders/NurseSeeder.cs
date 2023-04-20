@@ -5,46 +5,35 @@ namespace lab_medicine_api.Seeders;
 
 public class NurseSeeder
 {
-    private readonly LabMedicineContext _labMedicineContext;
-
-    public NurseSeeder(LabMedicineContext labMedicineContext)
+    public List<NurseModel> Seed()
     {
-        _labMedicineContext = labMedicineContext;
-    }
-
-    public void Seed(LabMedicineContext context)
-    {
-        // Verifica se já existem pacientes na base de dados
-        if (_labMedicineContext.Nurses.Any())
-        {
-            return; // Dados já foram adicionados
-        }
-
         var nurses = new List<NurseModel>
         {
-            new NurseModel
+            new ()
             {
+                Id = 13,
                 Name = "Julia Silva",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1990, 5, 20),
-                CPF = "73467182089",
+                CPF = "89924802020",
                 PhoneNumber = "92993448986",
                 EducationalInstitution = "Escola de Enfermagem da Universidade de São Paulo",
                 CofenUf = "123456/SP"
             },
-            new NurseModel
+            new ()
             {
+                Id = 14,
                 Name = "Gabriel Santos",
                 Gender = "Masculino",
                 BirthDate = new DateTime(1985, 8, 15),
-                CPF = "98765432109",
+                CPF = "61385125020",
                 PhoneNumber = "41994623474",
                 EducationalInstitution = "Escola de Enfermagem da Universidade Federal do Rio de Janeiro",
                 CofenUf = "654321/RJ"
             }
-
         };
-        
+
+        //verifica se cada objeto da lista é válido antes de mandar pro bd
         foreach (var nurse in nurses)
         {
             var validationContext = new ValidationContext(nurse);
@@ -56,13 +45,11 @@ public class NurseSeeder
                 {
                     Console.WriteLine(validationResult.ErrorMessage);
                 }
-                
+
                 throw new Exception("Há dados preenchidos de forma incorreta!");
             }
         }
-        
-        _labMedicineContext.Persons.AddRange(nurses);
-        _labMedicineContext.SaveChanges();
 
+        return nurses;
     }
 }

@@ -6,29 +6,17 @@ namespace lab_medicine_api.Seeders;
 
 public class DoctorSeeder
 {
-    private readonly LabMedicineContext _labMedicineContext;
-
-    public DoctorSeeder(LabMedicineContext labMedicineContext)
+    public List<DoctorModel> Seed()
     {
-        _labMedicineContext = labMedicineContext;
-    }
-
-    public void Seed(LabMedicineContext context)
-    {
-        // Verifica se já existem pacientes na base de dados
-        if (_labMedicineContext.Doctors.Any())
-        {
-            return; // Dados já foram adicionados
-        }
-
         var doctors = new List<DoctorModel>
         {
-            new DoctorModel
+            new ()
             {
+                Id = 11,
                 Name = "Carlos Silva Antunes",
                 Gender = "Masculino",
                 BirthDate = new DateTime(1980, 1, 1),
-                CPF = "12345678901",
+                CPF = "60544567099",
                 PhoneNumber = "71997437590",
                 EducationalInstitution = "Universidade de São Paulo",
                 CrmUf = "87458/SC",
@@ -36,12 +24,13 @@ public class DoctorSeeder
                 StatusInSystem = StatusInSystem.ATIVO,
                 AppointmentCount = 5
             },
-            new DoctorModel
+            new ()
             {
+                Id = 12,
                 Name = "Maria Souza",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1985, 5, 10),
-                CPF = "98765432101",
+                CPF = "26534267063",
                 PhoneNumber = "27997538253",
                 EducationalInstitution = "Universidade Federal do Rio de Janeiro",
                 CrmUf = "14785/SC",
@@ -50,7 +39,8 @@ public class DoctorSeeder
                 AppointmentCount = 10
             }
         };
-        
+
+        //verifica se cada objeto da lista é válido antes de mandar pro bd
         foreach (var doctor in doctors)
         {
             var validationContext = new ValidationContext(doctor);
@@ -62,13 +52,11 @@ public class DoctorSeeder
                 {
                     Console.WriteLine(validationResult.ErrorMessage);
                 }
-                
+
                 throw new Exception("Há dados preenchidos de forma incorreta!");
             }
         }
-        
-        _labMedicineContext.Doctors.AddRange(doctors);
-        _labMedicineContext.SaveChanges();
+
+        return doctors;
     }
-    
 }
