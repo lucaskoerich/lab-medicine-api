@@ -11,7 +11,7 @@ public class NurseSeeder
         {
             new ()
             {
-                Id = 13,
+                Id = 1,
                 Name = "Julia Silva",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1990, 5, 20),
@@ -22,7 +22,7 @@ public class NurseSeeder
             },
             new ()
             {
-                Id = 14,
+                Id = 2,
                 Name = "Gabriel Santos",
                 Gender = "Masculino",
                 BirthDate = new DateTime(1985, 8, 15),

@@ -57,96 +57,189 @@ namespace lab_medicine_api.Migrations
                         {
                             Id = 1,
                             Description = "Consulta de rotina",
-                            DoctorModelId = 11,
+                            DoctorModelId = 1,
                             PatientModelId = 1
                         },
                         new
                         {
                             Id = 2,
                             Description = "Exame de sangue",
-                            DoctorModelId = 12,
+                            DoctorModelId = 2,
                             PatientModelId = 1
                         },
                         new
                         {
                             Id = 3,
                             Description = "Consulta de rotina",
-                            DoctorModelId = 11,
+                            DoctorModelId = 1,
                             PatientModelId = 2
                         },
                         new
                         {
                             Id = 4,
                             Description = "Consulta de rotina",
-                            DoctorModelId = 12,
+                            DoctorModelId = 2,
                             PatientModelId = 3
                         },
                         new
                         {
                             Id = 5,
                             Description = "Acompanhamento nutricional",
-                            DoctorModelId = 11,
+                            DoctorModelId = 1,
                             PatientModelId = 3
                         },
                         new
                         {
                             Id = 6,
                             Description = "Consulta de alergia",
-                            DoctorModelId = 11,
+                            DoctorModelId = 1,
                             PatientModelId = 3
                         },
                         new
                         {
                             Id = 7,
                             Description = "Consulta de rotina",
-                            DoctorModelId = 12,
+                            DoctorModelId = 2,
                             PatientModelId = 4
                         },
                         new
                         {
                             Id = 8,
                             Description = "Consulta para avaliação cardíaca",
-                            DoctorModelId = 12,
+                            DoctorModelId = 2,
                             PatientModelId = 4
                         },
                         new
                         {
                             Id = 9,
                             Description = "Consulta de rotina",
-                            DoctorModelId = 12,
+                            DoctorModelId = 2,
                             PatientModelId = 5
                         },
                         new
                         {
                             Id = 10,
                             Description = "Consulta de rotina",
-                            DoctorModelId = 11,
+                            DoctorModelId = 1,
                             PatientModelId = 7
                         },
                         new
                         {
                             Id = 11,
                             Description = "Consulta de rotina",
-                            DoctorModelId = 12,
+                            DoctorModelId = 2,
                             PatientModelId = 8
                         },
                         new
                         {
                             Id = 12,
                             Description = "Consulta de rotina",
-                            DoctorModelId = 11,
+                            DoctorModelId = 1,
                             PatientModelId = 9
                         },
                         new
                         {
                             Id = 13,
                             Description = "Exame de sangue",
-                            DoctorModelId = 12,
+                            DoctorModelId = 2,
                             PatientModelId = 9
                         });
                 });
 
-            modelBuilder.Entity("lab_medicine_api.Models.PersonModel", b =>
+            modelBuilder.Entity("lab_medicine_api.Models.DoctorModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AppointmentCount")
+                        .HasColumnType("int")
+                        .HasColumnName("APPOINTMENT_COUNT");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("BIRTH_DATE");
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("CPF");
+
+                    b.Property<int>("ClinicalSpecialization")
+                        .HasColumnType("int")
+                        .HasColumnName("CLINICAL_SPECIALIZATION");
+
+                    b.Property<string>("CrmUf")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CRM_UF");
+
+                    b.Property<string>("EducationalInstitution")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("EDUCATIONAL_INSTITUTION");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GENDER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("NAME");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("PHONE_NUMBER");
+
+                    b.Property<int>("StatusInSystem")
+                        .HasColumnType("int")
+                        .HasColumnName("STATUS_IN_SYSTEM");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CPF")
+                        .IsUnique();
+
+                    b.ToTable("DOCTORS");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AppointmentCount = 6,
+                            BirthDate = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "60544567099",
+                            ClinicalSpecialization = 0,
+                            CrmUf = "87458/SC",
+                            EducationalInstitution = "Universidade de São Paulo",
+                            Gender = "Masculino",
+                            Name = "Carlos Silva Antunes",
+                            PhoneNumber = "71997437590",
+                            StatusInSystem = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AppointmentCount = 7,
+                            BirthDate = new DateTime(1985, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "26534267063",
+                            ClinicalSpecialization = 6,
+                            CrmUf = "14785/SC",
+                            EducationalInstitution = "Universidade Federal do Rio de Janeiro",
+                            Gender = "Feminino",
+                            Name = "Maria Souza",
+                            PhoneNumber = "27997538253",
+                            StatusInSystem = 0
+                        });
+                });
+
+            modelBuilder.Entity("lab_medicine_api.Models.NurseModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -163,6 +256,16 @@ namespace lab_medicine_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("CPF");
+
+                    b.Property<string>("CofenUf")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("COFEN_UF");
+
+                    b.Property<string>("EducationalInstitution")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("EDUCATIONAL_INSTITUTION");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -184,114 +287,41 @@ namespace lab_medicine_api.Migrations
                     b.HasIndex("CPF")
                         .IsUnique();
 
-                    b.ToTable("PERSON");
-
-                    b.UseTptMappingStrategy();
-                });
-
-            modelBuilder.Entity("lab_medicine_api.Models.DoctorModel", b =>
-                {
-                    b.HasBaseType("lab_medicine_api.Models.PersonModel");
-
-                    b.Property<int>("AppointmentCount")
-                        .HasColumnType("int")
-                        .HasColumnName("APPOINTMENT_COUNT");
-
-                    b.Property<int>("ClinicalSpecialization")
-                        .HasColumnType("int")
-                        .HasColumnName("CLINICAL_SPECIALIZATION");
-
-                    b.Property<string>("CrmUf")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("CRM_UF");
-
-                    b.Property<string>("EducationalInstitution")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("EDUCATIONAL_INSTITUTION");
-
-                    b.Property<int>("StatusInSystem")
-                        .HasColumnType("int")
-                        .HasColumnName("STATUS_IN_SYSTEM");
-
-                    b.ToTable("DOCTORS");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 11,
-                            BirthDate = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "60544567099",
-                            Gender = "Masculino",
-                            Name = "Carlos Silva Antunes",
-                            PhoneNumber = "71997437590",
-                            AppointmentCount = 5,
-                            ClinicalSpecialization = 0,
-                            CrmUf = "87458/SC",
-                            EducationalInstitution = "Universidade de São Paulo",
-                            StatusInSystem = 0
-                        },
-                        new
-                        {
-                            Id = 12,
-                            BirthDate = new DateTime(1985, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "26534267063",
-                            Gender = "Feminino",
-                            Name = "Maria Souza",
-                            PhoneNumber = "27997538253",
-                            AppointmentCount = 10,
-                            ClinicalSpecialization = 6,
-                            CrmUf = "14785/SC",
-                            EducationalInstitution = "Universidade Federal do Rio de Janeiro",
-                            StatusInSystem = 0
-                        });
-                });
-
-            modelBuilder.Entity("lab_medicine_api.Models.NurseModel", b =>
-                {
-                    b.HasBaseType("lab_medicine_api.Models.PersonModel");
-
-                    b.Property<string>("CofenUf")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("COFEN_UF");
-
-                    b.Property<string>("EducationalInstitution")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("EDUCATIONAL_INSTITUTION");
-
                     b.ToTable("NURSES");
 
                     b.HasData(
                         new
                         {
-                            Id = 13,
+                            Id = 1,
                             BirthDate = new DateTime(1990, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CPF = "89924802020",
+                            CofenUf = "123456/SP",
+                            EducationalInstitution = "Escola de Enfermagem da Universidade de São Paulo",
                             Gender = "Feminino",
                             Name = "Julia Silva",
-                            PhoneNumber = "92993448986",
-                            CofenUf = "123456/SP",
-                            EducationalInstitution = "Escola de Enfermagem da Universidade de São Paulo"
+                            PhoneNumber = "92993448986"
                         },
                         new
                         {
-                            Id = 14,
+                            Id = 2,
                             BirthDate = new DateTime(1985, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CPF = "61385125020",
+                            CofenUf = "654321/RJ",
+                            EducationalInstitution = "Escola de Enfermagem da Universidade Federal do Rio de Janeiro",
                             Gender = "Masculino",
                             Name = "Gabriel Santos",
-                            PhoneNumber = "41994623474",
-                            CofenUf = "654321/RJ",
-                            EducationalInstitution = "Escola de Enfermagem da Universidade Federal do Rio de Janeiro"
+                            PhoneNumber = "41994623474"
                         });
                 });
 
             modelBuilder.Entity("lab_medicine_api.Models.PatientModel", b =>
                 {
-                    b.HasBaseType("lab_medicine_api.Models.PersonModel");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Allergies")
                         .HasColumnType("nvarchar(max)")
@@ -305,18 +335,47 @@ namespace lab_medicine_api.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ATTENDANCE_STATUS");
 
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("BIRTH_DATE");
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("CPF");
+
                     b.Property<string>("EmergencyContact")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("EMERGENCY_CONTACT");
 
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GENDER");
+
                     b.Property<string>("Insurance")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("INSURANCE");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("NAME");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("PHONE_NUMBER");
+
                     b.Property<string>("SpecificCares")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("SPECIFIC_CARE");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CPF")
+                        .IsUnique();
 
                     b.ToTable("PATIENTS");
 
@@ -324,151 +383,151 @@ namespace lab_medicine_api.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDate = new DateTime(1985, 10, 15, 22, 15, 58, 0, DateTimeKind.Unspecified),
-                            CPF = "12874145871",
-                            Gender = "Masculino",
-                            Name = "João Silva",
-                            PhoneNumber = "91986850045",
                             Allergies = "[\"Amendoim\",\"Aspirina\"]",
                             AppointmentCount = 2,
                             AttendanceStatus = 2,
+                            BirthDate = new DateTime(1985, 10, 15, 22, 15, 58, 0, DateTimeKind.Unspecified),
+                            CPF = "12874145871",
                             EmergencyContact = "91365777069",
+                            Gender = "Masculino",
                             Insurance = "Amil",
+                            Name = "João Silva",
+                            PhoneNumber = "91986850045",
                             SpecificCares = "[\"Hipertensão\"]"
                         },
                         new
                         {
                             Id = 2,
-                            BirthDate = new DateTime(1990, 5, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "65587414544",
-                            Gender = "Feminino",
-                            Name = "Maria Santos",
-                            PhoneNumber = "11987654322",
                             Allergies = "[\"Leite\",\"Penicilina\"]",
                             AppointmentCount = 1,
                             AttendanceStatus = 1,
+                            BirthDate = new DateTime(1990, 5, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "65587414544",
                             EmergencyContact = "69992556682",
+                            Gender = "Feminino",
                             Insurance = "Unimed",
+                            Name = "Maria Santos",
+                            PhoneNumber = "11987654322",
                             SpecificCares = "[\"Diabetes\"]"
                         },
                         new
                         {
                             Id = 3,
-                            BirthDate = new DateTime(1982, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "88748739057",
-                            Gender = "Feminino",
-                            Name = "Ana Paula Oliveira",
-                            PhoneNumber = "11991234567",
                             Allergies = "[\"Frutos do mar\",\"Glúten\"]",
                             AppointmentCount = 3,
                             AttendanceStatus = 2,
+                            BirthDate = new DateTime(1982, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "88748739057",
                             EmergencyContact = "11987654321",
+                            Gender = "Feminino",
                             Insurance = "Bradesco Saúde",
+                            Name = "Ana Paula Oliveira",
+                            PhoneNumber = "11991234567",
                             SpecificCares = "[\"Asma\"]"
                         },
                         new
                         {
                             Id = 4,
-                            BirthDate = new DateTime(1975, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "20070117004",
-                            Gender = "Masculino",
-                            Name = "José da Silva",
-                            PhoneNumber = "21998765432",
                             Allergies = "[\"Abacaxi\",\"Ibuprofeno\"]",
                             AppointmentCount = 2,
                             AttendanceStatus = 2,
+                            BirthDate = new DateTime(1975, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "20070117004",
                             EmergencyContact = "21987654321",
+                            Gender = "Masculino",
                             Insurance = "SulAmérica Saúde",
+                            Name = "José da Silva",
+                            PhoneNumber = "21998765432",
                             SpecificCares = "[\"Pressão alta\"]"
                         },
                         new
                         {
                             Id = 5,
-                            BirthDate = new DateTime(1995, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "94942452023",
-                            Gender = "Feminino",
-                            Name = "Ana Souza",
-                            PhoneNumber = "21987654321",
                             Allergies = "[\"Ampicilina\",\"Abacaxi\"]",
                             AppointmentCount = 1,
                             AttendanceStatus = 0,
+                            BirthDate = new DateTime(1995, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "94942452023",
                             EmergencyContact = "21976453627",
+                            Gender = "Feminino",
                             Insurance = "Bradesco Saúde",
+                            Name = "Ana Souza",
+                            PhoneNumber = "21987654321",
                             SpecificCares = "[\"Asma\"]"
                         },
                         new
                         {
                             Id = 6,
-                            BirthDate = new DateTime(1970, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "29061208041",
-                            Gender = "Masculino",
-                            Name = "Pedro Oliveira",
-                            PhoneNumber = "31987654321",
                             Allergies = "[\"Frutos do mar\",\"Cacau\"]",
                             AppointmentCount = 0,
                             AttendanceStatus = 0,
+                            BirthDate = new DateTime(1970, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "29061208041",
                             EmergencyContact = "31974563215",
+                            Gender = "Masculino",
                             Insurance = "SulAmérica",
+                            Name = "Pedro Oliveira",
+                            PhoneNumber = "31987654321",
                             SpecificCares = "[\"Colesterol alto\"]"
                         },
                         new
                         {
                             Id = 7,
-                            BirthDate = new DateTime(1995, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "54175182047",
-                            Gender = "Feminino",
-                            Name = "Fernanda Oliveira",
-                            PhoneNumber = "81991234567",
                             Allergies = "[\"Nozes\",\"Leite\"]",
                             AppointmentCount = 1,
                             AttendanceStatus = 1,
+                            BirthDate = new DateTime(1995, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "54175182047",
                             EmergencyContact = "81987654321",
+                            Gender = "Feminino",
                             Insurance = "Golden Cross",
+                            Name = "Fernanda Oliveira",
+                            PhoneNumber = "81991234567",
                             SpecificCares = "[\"Depressão\"]"
                         },
                         new
                         {
                             Id = 8,
-                            BirthDate = new DateTime(1980, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "44849054005",
-                            Gender = "Masculino",
-                            Name = "Pedro Henrique Souza",
-                            PhoneNumber = "31991234567",
                             Allergies = "[\"Poeira\",\"Camarão\"]",
                             AppointmentCount = 1,
                             AttendanceStatus = 0,
+                            BirthDate = new DateTime(1980, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "44849054005",
                             EmergencyContact = "31987654321",
+                            Gender = "Masculino",
                             Insurance = "Amil",
+                            Name = "Pedro Henrique Souza",
+                            PhoneNumber = "31991234567",
                             SpecificCares = "[\"Diabetes\"]"
                         },
                         new
                         {
                             Id = 9,
-                            BirthDate = new DateTime(1992, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "87427425014",
-                            Gender = "Feminino",
-                            Name = "Sandra Silva",
-                            PhoneNumber = "21991234567",
                             Allergies = "[\"Amendoim\",\"Aspirina\"]",
                             AppointmentCount = 2,
                             AttendanceStatus = 2,
+                            BirthDate = new DateTime(1992, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "87427425014",
                             EmergencyContact = "21987654321",
+                            Gender = "Feminino",
                             Insurance = "Unimed",
+                            Name = "Sandra Silva",
+                            PhoneNumber = "21991234567",
                             SpecificCares = "[\"Hipertensão\"]"
                         },
                         new
                         {
                             Id = 10,
-                            BirthDate = new DateTime(1997, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CPF = "98257694088",
-                            Gender = "Feminino",
-                            Name = "Maria Joaquina",
-                            PhoneNumber = "31987654321",
                             Allergies = "[\"Amendoim\",\"Lactose\"]",
                             AppointmentCount = 0,
                             AttendanceStatus = 0,
+                            BirthDate = new DateTime(1997, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CPF = "98257694088",
                             EmergencyContact = "31998765432",
+                            Gender = "Feminino",
                             Insurance = "Golden Cross",
+                            Name = "Maria Joaquina",
+                            PhoneNumber = "31987654321",
                             SpecificCares = "[\"Asma\"]"
                         });
                 });
@@ -490,33 +549,6 @@ namespace lab_medicine_api.Migrations
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("lab_medicine_api.Models.DoctorModel", b =>
-                {
-                    b.HasOne("lab_medicine_api.Models.PersonModel", null)
-                        .WithOne()
-                        .HasForeignKey("lab_medicine_api.Models.DoctorModel", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("lab_medicine_api.Models.NurseModel", b =>
-                {
-                    b.HasOne("lab_medicine_api.Models.PersonModel", null)
-                        .WithOne()
-                        .HasForeignKey("lab_medicine_api.Models.NurseModel", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("lab_medicine_api.Models.PatientModel", b =>
-                {
-                    b.HasOne("lab_medicine_api.Models.PersonModel", null)
-                        .WithOne()
-                        .HasForeignKey("lab_medicine_api.Models.PatientModel", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("lab_medicine_api.Models.DoctorModel", b =>

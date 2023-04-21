@@ -12,7 +12,7 @@ public class DoctorSeeder
         {
             new ()
             {
-                Id = 11,
+                Id = 1,
                 Name = "Carlos Silva Antunes",
                 Gender = "Masculino",
                 BirthDate = new DateTime(1980, 1, 1),
@@ -22,11 +22,11 @@ public class DoctorSeeder
                 CrmUf = "87458/SC",
                 ClinicalSpecialization = ClinicalSpecialization.CLINICO_GERAL,
                 StatusInSystem = StatusInSystem.ATIVO,
-                AppointmentCount = 5
+                AppointmentCount = 6
             },
             new ()
             {
-                Id = 12,
+                Id = 2,
                 Name = "Maria Souza",
                 Gender = "Feminino",
                 BirthDate = new DateTime(1985, 5, 10),
@@ -36,7 +36,7 @@ public class DoctorSeeder
                 CrmUf = "14785/SC",
                 ClinicalSpecialization = ClinicalSpecialization.PSIQUIATRIA,
                 StatusInSystem = StatusInSystem.ATIVO,
-                AppointmentCount = 10
+                AppointmentCount = 7
             }
         };
 

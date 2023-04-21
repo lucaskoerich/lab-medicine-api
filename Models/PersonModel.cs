@@ -3,16 +3,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace lab_medicine_api.Models;
 
-[Table("PERSON")]
 public abstract class PersonModel
 {
-    [Column("ID"), Key] public int Id { get; set; }
+    [Column("ID")]
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
     [Column("NAME")]
     [Required(ErrorMessage = "Nome não pode ser vazio!")]
     [MinLength(5, ErrorMessage = "Nome precisa conter no mínimo 5 caracteres.")]
     public string Name { get; set; }
-    
+
     [Column("GENDER")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Gênero não pode ser vazio!")]
     public string Gender { get; set; }

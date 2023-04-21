@@ -100,7 +100,7 @@ public class DoctorController : Controller
     [HttpPost]
     public ActionResult<PostDoctorDto> DoctorPost([FromBody] PostDoctorDto postDoctorDto)
     {
-        var doctorExists = _labMedicineContext.Persons.Any(d => d.CPF == postDoctorDto.CPF);
+        var doctorExists = _labMedicineContext.Doctors.Any(d => d.CPF == postDoctorDto.CPF);
 
         if (doctorExists)
         {
@@ -153,7 +153,7 @@ public class DoctorController : Controller
         doctorModel.ClinicalSpecialization = updateDoctorDto.ClinicalSpecialization;
         doctorModel.StatusInSystem = updateDoctorDto.StatusInSystem;
 
-        var cpfExists = _labMedicineContext.Persons.Any(p => p.CPF == updateDoctorDto.CPF);
+        var cpfExists = _labMedicineContext.Doctors.Any(p => p.CPF == updateDoctorDto.CPF);
 
         if (cpfExists)
         {

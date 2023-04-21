@@ -69,7 +69,7 @@ public class NurseController : Controller
     [HttpPost]
     public ActionResult<NurseDto> NursePost([FromBody] NurseDto nurseDto)
     {
-        var nurseExists = _labMedicineContext.Persons.Any(n => n.CPF == nurseDto.CPF);
+        var nurseExists = _labMedicineContext.Nurses.Any(n => n.CPF == nurseDto.CPF);
 
         if (nurseExists)
         {
@@ -117,7 +117,7 @@ public class NurseController : Controller
         nurseModel.EducationalInstitution = nurseDto.EducationalInstitution;
         nurseModel.CofenUf = nurseDto.CofenUf;
 
-        var cpfExists = _labMedicineContext.Persons.Any(p => p.CPF == nurseDto.CPF);
+        var cpfExists = _labMedicineContext.Nurses.Any(p => p.CPF == nurseDto.CPF);
 
         if (cpfExists)
         {

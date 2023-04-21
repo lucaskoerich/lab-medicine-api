@@ -10,8 +10,7 @@ public class LabMedicineContext : DbContext
     public LabMedicineContext(DbContextOptions options) : base(options)
     {
     }
-
-    public DbSet<PersonModel> Persons { get; set; }
+    
     public DbSet<PatientModel> Patients { get; set; }
     public DbSet<DoctorModel> Doctors { get; set; }
     public DbSet<NurseModel> Nurses { get; set; }
@@ -19,7 +18,9 @@ public class LabMedicineContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PersonModel>().HasIndex(p => p.CPF).IsUnique();
+        modelBuilder.Entity<PatientModel>().HasIndex(p => p.CPF).IsUnique();
+        modelBuilder.Entity<DoctorModel>().HasIndex(p => p.CPF).IsUnique();
+        modelBuilder.Entity<NurseModel>().HasIndex(p => p.CPF).IsUnique();
 
         modelBuilder.Entity<AppointmentModel>()
             .HasOne<PatientModel>(a => a.Patient)
