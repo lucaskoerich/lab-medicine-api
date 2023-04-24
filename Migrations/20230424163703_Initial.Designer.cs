@@ -12,7 +12,7 @@ using lab_medicine_api.Models;
 namespace lab_medicine_api.Migrations
 {
     [DbContext(typeof(LabMedicineContext))]
-    [Migration("20230421011547_Initial")]
+    [Migration("20230424163703_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
