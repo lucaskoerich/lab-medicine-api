@@ -62,7 +62,7 @@ public class DoctorController : Controller
 
     [HttpGet]
     [Route("{id}")]
-    public ActionResult<DoctorDto> GetDoctorByCPF([FromRoute] int id)
+    public ActionResult<DoctorDto> GetDoctorById([FromRoute] int id)
     {
         DoctorModel doctorModel = _labMedicineContext.Doctors.Find(id);
         var appointmentsList = _labMedicineContext.Appointments.ToList();
